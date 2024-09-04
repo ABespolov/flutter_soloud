@@ -16331,7 +16331,7 @@ static void ma_thread_wait__posix(ma_thread* pThread)
 static ma_result ma_mutex_init__posix(ma_mutex* pMutex)
 {
     int result;
-    
+
     if (pMutex == NULL) {
         return MA_INVALID_ARGS;
     }
@@ -18132,7 +18132,7 @@ static ma_result ma_context_get_device_info__compat(void* pUserData, ma_context*
 static ma_result ma_device_init__compat(void* pUserData, ma_device* pDevice, const ma_device_config* pConfig, ma_device_descriptor* pDescriptorPlayback, ma_device_descriptor* pDescriptorCapture)
 {
     (void)pUserData;
-    
+
     if (pDevice->pContext->callbacks.onDeviceInit == NULL) {
         return MA_NOT_IMPLEMENTED;
     }
@@ -35217,6 +35217,10 @@ static ma_result ma_context_init__coreaudio(ma_context* pContext, const ma_conte
             }
         }
 
+        if (![pAudioSession setCategory:AVAudioSessionCategoryAmbient withOptions:options error:nil]) {
+                return MA_INVALID_OPERATION;  /* Failed to set session category to Ambient. */
+         }
+
         if (!pConfig->coreaudio.noAudioSessionActivate) {
             if (![pAudioSession setActive:true error:nil]) {
                 ma_log_postf(ma_context_get_log(pContext), MA_LOG_LEVEL_ERROR, "Failed to activate audio session.");
@@ -41800,7 +41804,7 @@ MA_API ma_result ma_context_init(const ma_backend backends[], ma_uint32 backendC
             }
         }
 
-        
+
 
         /* If this iteration was successful, return. */
         if (result == MA_SUCCESS) {
@@ -71012,7 +71016,7 @@ static ma_result ma_node_graph_data_source__on_get_data_format(ma_data_source* p
     return MA_SUCCESS;
 }
 
-static ma_data_source_vtable ma_gNodeGraphDataSourceVTable = 
+static ma_data_source_vtable ma_gNodeGraphDataSourceVTable =
 {
     ma_node_graph_data_source__on_read,
     NULL,   /* onSeek */
@@ -74277,7 +74281,7 @@ static void ma_engine_node_process_pcm_frames__general(ma_engine_node* pEngineNo
             pSound->notifications.onProcess(pSound->notifications.pUserData, pSound, ppFramesOut[0], totalFramesProcessedOut);
         }
     }
-    
+
 
     /* At this point we're done processing. */
     *pFrameCountIn  = totalFramesProcessedIn;
@@ -75865,7 +75869,7 @@ MA_API ma_result ma_sound_init_from_file_internal(ma_engine* pEngine, const ma_s
             notifications.done.pNotification = &pSound->resourceManagerDoneNotification;
         }
     }
-    
+
 
     /*
     We must wrap everything around the fence if one was specified. This ensures ma_fence_wait() does
